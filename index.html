@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ASTHETIC — Portfolio</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* ===== Reset & base ===== */
+:root{
+  --bg:#060608;
+  --accent:#ff2f63;
+  --muted: rgba(240,43,80,0.12);
+  --glass: rgba(255,255,255,0.06);
+  --glass-2: rgba(255,255,255,0.04);
+  --card-radius:20px;
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-highlight: rgba(255,255,255,0.06);
+  --text: #f6f6f8;
+  --sub: rgba(246,246,248,0.65);
+  --shadow: 0 10px 30px rgba(2,2,6,0.6);
+  --glass-blur: 8px;
+  --glass-blur-strong: 14px;
+  --gap: clamp(12px, 2.2vw, 28px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(1200px 400px at 10% 10%, rgba(255,47,99,0.06), transparent 10%),
+    radial-gradient(900px 300px at 90% 80%, rgba(0,190,255,0.03), transparent 15%),
+    linear-gradient(180deg,#020204 0%, var(--bg) 60%);
+  color:var(--text);
+  padding:28px;
+  min-height:100%;
+  overflow-y:auto;
+  -webkit-backdrop-filter: blur(0px);
+}
+
+/* ===== Header / Nav ===== */
+.header{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  justify-content:space-between;
+  max-width:1200px;
+  margin:0 auto 34px;
+  padding:10px;
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.logo{
+  width:46px;height:46px;border-radius:12px;
+  background: linear-gradient(135deg,#ff2f63,#ffd166);
+  display:grid;place-items:center;font-weight:700;color:#100;
+  box-shadow: 0 6px 18px rgba(240,43,99,0.14);
+  transform:rotate(-8deg);
+}
+.title{
+  line-height:1;
+}
+.title h1{font-size:1.05rem;letter-spacing:-0.2px}
+.title p{font-size:12px;color:var(--sub)}
+
+/* glass nav / controls */
+.controls{
+  display:flex;gap:12px;align-items:center;
+}
+.filter-bar{
+  display:flex;gap:8px;padding:6px;border-radius:999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px rgba(255,255,255,0.02);
+}
+.filter-btn{
+  padding:8px 12px;font-size:13px;border-radius:999px;
+  background:transparent;color:var(--sub);border:none;cursor:pointer;
+  transition: all .25s ease;
+}
+.filter-btn.active{
+  background: linear-gradient(90deg, rgba(255,47,99,0.12), rgba(255,170,80,0.06));
+  color:var(--text);
+  transform:translateY(-2px) scale(1.01);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+.add-btn{
+  padding:8px 12px;border-radius:12px;background:linear-gradient(90deg,#1b1b1f, rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.04);color:var(--sub);font-weight:600;
+  display:inline-flex;gap:8px;align-items:center;cursor:pointer;
+}
+
+/* ===== Hero / Intro ===== */
+.hero{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns: 1fr;gap:18px;align-items:center;
+  margin-bottom:28px;
+}
+.hero-card{
+  padding:28px;border-radius:22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow);
+  display:flex;gap:18px;align-items:center;justify-content:space-between;
+}
+.hero-left{
+  display:flex;gap:16px;align-items:center;
+}
+.hero-badge{
+  width:74px;height:74px;border-radius:18px;background:linear-gradient(135deg,#ff2f63,#ff9a66);
+  display:grid;place-items:center;font-weight:700;color:#110;font-size:20px;
+  transform:rotate(-6deg);
+}
+.hero-copy h2{font-size:1.25rem}
+.hero-copy p{color:var(--sub);font-size:13px;margin-top:6px;max-width:62ch}
+
+/* animated blobs for aesthetic */
+.blobs{
+  position:fixed;right:-80px;top:20vh;pointer-events:none;mix-blend-mode:screen;opacity:0.9;
+}
+.blob{
+  width:380px;height:380px;border-radius:50%;filter:blur(48px);transform:translate3d(0,0,0);
+  position:relative;opacity:0.14;
+}
+.blob.a{background: linear-gradient(90deg,#ff2f63,#ffd166);animation:blob-move 14s ease-in-out infinite}
+.blob.b{background: linear-gradient(90deg,#00d2ff,#0047ff);animation:blob-move 18s ease-in-out infinite;top:140px;left:-40px;opacity:0.08}
+@keyframes blob-move{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-28px) scale(1.06)}100%{transform:translateY(0) scale(1)}}
+
+/* ===== Portfolio grid ===== */
+.portfolio-wrap{
+  max-width:1200px;margin:0 auto;padding-bottom:60px;
+}
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  gap:var(--gap);
+}
+@media (max-width:1024px){.grid{grid-template-columns: repeat(2,1fr)}}
+@media (max-width:640px){.grid{grid-template-columns: 1fr}}
+
+/* card style - glass card */
+.card{
+  border-radius:var(--card-radius);
+  overflow:hidden;
+  background: linear-gradient(180deg,var(--glass), var(--glass-2));
+  border:1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow);
+  transform-origin:center;
+  transition: transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .28s;
+  position:relative;
+  min-height:260px;
+  display:flex;
+  flex-direction:column;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(2,2,6,0.75);
+}
+.media{
+  width:100%;height:200px;display:block;object-fit:cover;background:#0b0b0d;
+  position:relative;
+}
+.card-content{
+  padding:14px 16px;
+  display:flex;flex-direction:column;gap:10px;flex:1;
+}
+.kicker{font-size:12px;color:var(--sub);letter-spacing:0.6px}
+.card h3{color:var(--text);font-size:16px}
+.card p{color:var(--sub);font-size:13px;line-height:1.4}
+
+/* tag bubble */
+.type-tag{
+  position:absolute;left:12px;top:12px;padding:6px 10px;border-radius:999px;font-size:12px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.25), rgba(255,255,255,0.03));
+  border:1px solid rgba(255,255,255,0.03);
+  color:var(--text);backdrop-filter: blur(6px);
+}
+
+/* action row */
+.actions{display:flex;gap:8px;margin-top:auto;align-items:center}
+.btn{
+  padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);
+  color:var(--sub);font-weight:600;font-size:13px;cursor:pointer;text-decoration:none;
+  transition: all .18s ease;
+}
+.btn.primary{
+  background: linear-gradient(90deg,#ff2f63,#ff9a66);color:#120;border:none;
+  box-shadow: 0 8px 20px rgba(255,47,99,0.12);
+}
+.btn:hover{transform:translateY(-4px)}
+
+/* small doc icon row */
+.meta-row{display:flex;gap:8px;align-items:center;margin-top:6px}
+.meta{
+  font-size:12px;color:var(--sub);display:inline-flex;gap:8px;align-items:center;
+  padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.01);
+  border:1px solid rgba(255,255,255,0.02);
+}
+
+/* subtle entrance */
+.card {opacity:0; transform: translateY(16px) scale(.995); animation:card-in .7s forwards cubic-bezier(.2,.9,.3,1)}
+@keyframes card-in{to{opacity:1;transform:none}}
+
+/* ===== Lightbox / Modal ===== */
+.modal{
+  position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.75));
+  z-index:1200;padding:28px;opacity:0;pointer-events:none;transition:all .22s ease;
+}
+.modal.open{opacity:1;pointer-events:auto}
+.modal-inner{
+  width:min(1200px,98%);max-height:92vh;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.012));
+  border-radius:14px;padding:12px;border:1px solid rgba(255,255,255,0.05);backdrop-filter: blur(var(--glass-blur-strong));
+  display:flex;flex-direction:column;gap:12px;overflow:hidden;
+}
+.modal-media{flex:1;display:grid;place-items:center;overflow:auto}
+.modal-media img, .modal-media video, .modal-media iframe{max-width:100%;max-height:80vh;border-radius:8px}
+.modal-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+.close-x{background:transparent;border:none;color:var(--sub);font-weight:700;font-size:18px;cursor:pointer}
+
+/* ===== file input form (hidden) & simple uploader UI ===== */
+.uploader{
+  display:flex;gap:8px;align-items:center;padding:8px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border:1px solid rgba(255,255,255,0.02);
+}
+.select{padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--sub)}
+.fake-input{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px dashed rgba(255,255,255,0.03);color:var(--sub);font-size:13px}
+
+/* small helpers */
+.center{display:grid;place-items:center}
+
+/* ===== tiny responsive tweaks ===== */
+@media (max-width:420px){
+  .header{padding:6px 6px;gap:8px}
+  .logo{width:44px;height:44px}
+  .hero-card{padding:18px;border-radius:14px}
+  .blob{display:none}
+  .filter-bar{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="blobs" aria-hidden="true">
+  <div class="blob a"></div>
+  <div class="blob b"></div>
+</div>
+
+<header class="header" role="banner">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div class="title">
+      <h1>ASTHETIC</h1>
+      <p>Design portfolio — Photos · Videos · Posters · PPT · Docs</p>
+    </div>
+  </div>
+
+  <div class="controls" role="navigation" aria-label="filters">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="photo">Photos</button>
+      <button class="filter-btn" data-filter="video">Videos</button>
+      <button class="filter-btn" data-filter="poster">Posters</button>
+      <button class="filter-btn" data-filter="ppt">PPT</button>
+      <button class="filter-btn" data-filter="doc">Docs</button>
+    </div>
+
+    <label class="add-btn" title="Add new item">
+      <input id="fileInput" type="file" style="display:none" />
+      <span>+ Add</span>
+    </label>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-card">
+      <div class="hero-left">
+        <div class="hero-badge">AD</div>
+        <div class="hero-copy">
+          <h2 id="heroTitle">Designing the Future, One Pixel at a Time</h2>
+          <p>Flexible portfolio grid with liquid glass cards, subtle animations, and a lightbox that handles images, videos, embedded PPT and documents. Add or remove items — grid adapts.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div class="uploader" style="gap:8px">
+          <select id="typeSelect" class="select" aria-label="Select type">
+            <option value="photo">Photo</option>
+            <option value="video">Video</option>
+            <option value="poster">Poster</option>
+            <option value="ppt">PPT</option>
+            <option value="doc">Doc</option>
+          </select>
+          <div class="fake-input">Ready to add</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="portfolio-wrap" aria-label="portfolio">
+    <div class="grid" id="grid">
+
+      <!-- SAMPLE PHOTO -->
+      <article class="card" data-type="photo" data-title="Mountain Photo" data-src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder">
+        <div class="type-tag">Photo</div>
+        <img class="media" src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Mountain">
+        <div class="card-content">
+          <div class="kicker">Landscape</div>
+          <h3>Mountain Photo</h3>
+          <p>Large-format photo for hero backgrounds or posters.</p>
+          <div class="meta-row">
+            <div class="meta">PNG · 3.2MB</div>
+            <div style="flex:1"></div>
+            <div class="actions">
+              <a class="btn" href="#" data-action="open">Preview</a>
+              <a class="btn primary" href="#" data-action="download">Download</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SAMPLE VIDEO -->
+      <article class="card" data-type="video" data-title="Short Motion" data-src="https://www.w3schools.com/html/mov_bbb.mp4">
+        <div class="type-tag">Video</div>
+        <video class="media" src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video>
+        <div class="card-content">
+          <div class="kicker">Motion</div>
+          <h3>Short Motion</h3>
+          <p>Autoplay muted looped preview of motion piece. Click preview for larger view.</p>
+          <div class="meta-row">
+            <div class="meta">MP4 · 6.1MB</div>
+            <div style="flex:1"></div>
+            <div class="actions">
+              <a class="btn" href="#" data-action="open">Preview</a>
+              <a class="btn" href="#" data-action="download">Download</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SAMPLE POSTER -->
+      <article class="card" data-type="poster" data-title="Event Poster" data-src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder">
+        <div class="type-tag">Poster</div>
+        <img class="media" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Poster">
+        <div class="card-content">
+          <div class="kicker">Poster</div>
+          <h3>Event Poster</h3>
+          <p>Poster design mock-up. Great for printing and social media banners.</p>
+          <div class="meta-row">
+            <div class="meta">PDF · 2 pages</div>
+            <div style="flex:1"></div>
+            <div class="actions">
+              <a class="btn" href="#" data-action="open">Preview</a>
+              <a class="btn" href="#" data-action="download">Download</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SAMPLE PPT (embeddable) -->
+      <article class="card" data-type="ppt" data-title="Pitch Deck" data-src="https://docs.google.com/presentation/d/e/2PACX-1vRplaceholder/embed?start=false&loop=false&delayms=3000">
+        <div class="type-tag">PPT</div>
+        <div class="media center" style="background:linear-gradient(180deg,#0b0b0d,#060608);color:var(--sub);font-weight:700">
+          <div>• PPT •</div>
+        </div>
+        <div class="card-content">
+          <div class="kicker">Presentation</div>
+          <h3>Pitch Deck</h3>
+          <p>Embedded presentation — replace <em>data-src</em> with your public Google Slides embed link or Office 365 link.</p>
+          <div class="meta-row">
+            <div class="meta">PPTX · 12 slides</div>
+            <div style="flex:1"></div>
+            <div class="actions">
+              <a class="btn" href="#" data-action="open">Open</a>
+              <a class="btn" href="#" data-action="download">Download</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SAMPLE DOC -->
+      <article class="card" data-type="doc" data-title="Case Study" data-src="https://docs.google.com/document/d/e/2PACX-1vQplaceholder/pub?embedded=true">
+        <div class="type-tag">Doc</div>
+        <div class="media center" style="background:linear-gradient(90deg,#06111a,#0b0b0d);color:var(--sub);font-weight:700">
+          <div>• DOC •</div>
+        </div>
+        <div class="card-content">
+          <div class="kicker">Document</div>
+          <h3>Case Study</h3>
+          <p>Project write-up and deliverables. Use public share link to embed or open in modal.</p>
+          <div class="meta-row">
+            <div class="meta">DOCX · 6 pages</div>
+            <div style="flex:1"></div>
+            <div class="actions">
+              <a class="btn" href="#" data-action="open">Open</a>
+              <a class="btn" href="#" data-action="download">Download</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- more cards can be added here; grid is flexible -->
+    </div>
+  </section>
+</main>
+
+<!-- Modal / Lightbox -->
+<div class="modal" id="modal" role="dialog" aria-hidden="true" aria-modal="true">
+  <div class="modal-inner" role="document">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;gap:12px;align-items:center">
+        <strong id="modalTitle" style="font-size:14px"></strong>
+        <span id="modalType" style="color:var(--sub);font-size:13px"></span>
+      </div>
+      <div class="modal-actions">
+        <button class="close-x" id="closeModal" title="Close">✕</button>
+      </div>
+    </div>
+    <div class="modal-media" id="modalMedia"></div>
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+      <div style="color:var(--sub);font-size:13px">Preview — use the controls to download or open in new tab</div>
+      <div style="display:flex;gap:8px">
+        <a id="openNew" class="btn" target="_blank" rel="noopener">Open</a>
+        <a id="downloadBtn" class="btn primary" download>Download</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Utilities ===== */
+const grid = document.getElementById('grid');
+const filterBtns = document.querySelectorAll('.filter-btn');
+const modal = document.getElementById('modal');
+const modalMedia = document.getElementById('modalMedia');
+const modalTitle = document.getElementById('modalTitle');
+const modalType = document.getElementById('modalType');
+const closeModal = document.getElementById('closeModal');
+const openNew = document.getElementById('openNew');
+const downloadBtn = document.getElementById('downloadBtn');
+const fileInput = document.getElementById('fileInput');
+const typeSelect = document.getElementById('typeSelect');
+const fakeInput = document.querySelector('.fake-input');
+
+/* ===== Filtering ===== */
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    filterGrid(filter);
+  });
+});
+function filterGrid(filter){
+  const cards = grid.querySelectorAll('.card');
+  cards.forEach((c,i)=>{
+    const t = c.dataset.type;
+    if(filter === 'all' || t === filter){
+      c.style.display = '';
+      c.style.animationDelay = `${0.05*i}s`;
+    } else {
+      c.style.display = 'none';
+    }
+  });
+}
+
+/* ===== Card actions: open, download ===== */
+grid.addEventListener('click', (e)=>{
+  const actionBtn = e.target.closest('[data-action]');
+  if(actionBtn){
+    e.preventDefault();
+    const card = actionBtn.closest('.card');
+    const action = actionBtn.dataset.action;
+    if(action === 'open'){
+      openModalForCard(card);
+    } else if(action === 'download'){
+      triggerDownload(card);
+    }
+  } else {
+    // click on media preview opens modal
+    const card = e.target.closest('.card');
+    if(card){
+      const clickedEl = e.target;
+      // avoid opening when clicking action buttons
+      if(clickedEl.closest('.actions')) return;
+      openModalForCard(card);
+    }
+  }
+});
+
+function openModalForCard(card){
+  const type = card.dataset.type;
+  const src = card.dataset.src;
+  const title = card.dataset.title || 'Preview';
+  modalTitle.textContent = title;
+  modalType.textContent = ` — ${type.toUpperCase()}`;
+  openNew.href = src || '#';
+  downloadBtn.href = src || '#';
+  downloadBtn.setAttribute('download','');
+
+  // clear modal content
+  modalMedia.innerHTML = '';
+
+  if(type === 'photo' || type === 'poster'){
+    const img = document.createElement('img');
+    img.src = src || card.querySelector('img')?.src || '';
+    img.alt = title;
+    modalMedia.appendChild(img);
+  } else if(type === 'video'){
+    const vid = document.createElement('video');
+    vid.src = src || card.querySelector('video')?.currentSrc || card.querySelector('video')?.src || '';
+    vid.controls = true;
+    vid.autoplay = true;
+    modalMedia.appendChild(vid);
+  } else if(type === 'ppt' || type === 'doc'){
+    // try to embed; if it's a raw url, use iframe — user should provide embeddable public links for best experience
+    const iframe = document.createElement('iframe');
+    iframe.src = src || '';
+    iframe.style.width = '100%';
+    iframe.style.height = '70vh';
+    iframe.frameBorder = 0;
+    modalMedia.appendChild(iframe);
+  } else {
+    modalMedia.textContent = 'Preview not supported for this type.';
+  }
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+
+/* modal close */
+closeModal.addEventListener('click', closeLightbox);
+modal.addEventListener('click', (e)=>{
+  if(e.target === modal) closeLightbox();
+});
+function closeLightbox(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  // stop any playing media
+  const vid = modalMedia.querySelector('video');
+  if(vid){ vid.pause(); vid.src = ''; }
+  modalMedia.innerHTML = '';
+}
+
+/* download fallback */
+function triggerDownload(card){
+  // if data-src is embeddable or same-origin, we can trigger download link
+  const src = card.dataset.src || card.querySelector('img')?.src || card.querySelector('video')?.src || '';
+  if(!src) return alert('No file available to download.');
+  const a = document.createElement('a');
+  a.href = src;
+  a.download = '';
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+/* ===== simple drag animation: play/pause previews on hover for video cards ===== */
+document.querySelectorAll('.card[data-type="video"]').forEach(c=>{
+  c.addEventListener('mouseenter', ()=> {
+    const v = c.querySelector('video');
+    if(v){ v.play().catch(()=>{}); }
+  });
+  c.addEventListener('mouseleave', ()=> {
+    const v = c.querySelector('video');
+    if(v){ v.pause(); v.currentTime = 0; }
+  });
+});
+
+/* ===== ADD / Upload (client-side preview only) ===== */
+/* file input triggers a new card (client-only). If you want server upload, hook this to your backend. */
+fileInput.addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const selectedType = typeSelect.value;
+  fakeInput.textContent = file.name;
+  // create object URL for preview
+  const url = URL.createObjectURL(file);
+  addCard({type:selectedType, title:file.name, src:url, name:file.name, size: file.size});
+  // reset input for consecutive uploads
+  fileInput.value = '';
+});
+
+document.querySelector('.add-btn').addEventListener('click', ()=>{
+  fileInput.click();
+});
+
+/* helper to create card element */
+function addCard({type='photo', title='New Item', src='', name='', size=0}){
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.dataset.type = type;
+  card.dataset.title = title;
+  card.dataset.src = src;
+
+  // media DOM
+  let mediaHTML = '';
+  if(type==='photo' || type==='poster'){
+    mediaHTML = `<img class="media" src="${src}" alt="${title}">`;
+  } else if(type==='video'){
+    mediaHTML = `<video class="media" src="${src}" muted loop playsinline></video>`;
+  } else {
+    mediaHTML = `<div class="media center" style="background:linear-gradient(90deg,#0b0b0d,#060608);color:var(--sub);font-weight:700"><div>• ${type.toUpperCase()} •</div></div>`;
+  }
+
+  card.innerHTML = `
+    <div class="type-tag">${type[0].toUpperCase()+type.slice(1)}</div>
+    ${mediaHTML}
+    <div class="card-content">
+      <div class="kicker">${type==='photo' ? 'Image' : (type==='video' ? 'Motion' : type === 'ppt' ? 'Presentation' : 'Document')}</div>
+      <h3>${title}</h3>
+      <p>${name || ''}</p>
+      <div style="flex:1"></div>
+      <div class="meta-row">
+        <div class="meta">${Math.round(size/1024)} KB</div>
+        <div style="flex:1"></div>
+        <div class="actions">
+          <a class="btn" href="#" data-action="open">Preview</a>
+          <a class="btn" href="#" data-action="download">Download</a>
+        </div>
+      </div>
+    </div>
+  `;
+  grid.prepend(card);
+  // small entrance animation delay
+  const cards = grid.querySelectorAll('.card');
+  cards.forEach((c,i)=> c.style.animationDelay = `${i*0.03}s`);
+  // attach hover play/pause if video
+  if(type==='video'){ card.addEventListener('mouseenter', ()=> card.querySelector('video')?.play()); card.addEventListener('mouseleave', ()=> { const v=card.querySelector('video'); if(v){v.pause();v.currentTime=0;} }); }
+}
+
+/* ==== Accessibility: keyboard close ==== */
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && modal.classList.contains('open')) closeLightbox();
+});
+
+/* initial filter state set */
+filterGrid('all');
+
+/* ===== Bonus: lazy load images for performance ===== */
+const lazyImgs = document.querySelectorAll('img.media');
+if('loading' in HTMLImageElement.prototype){
+  lazyImgs.forEach(img=>img.loading='lazy');
+} else {
+  // fallback intersection observer
+  const io = new IntersectionObserver((entries, observer)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const img = entry.target;
+        if(img.dataset.src){ img.src = img.dataset.src; }
+        observer.unobserve(img);
+      }
+    });
+  });
+  lazyImgs.forEach(img=>io.observe(img));
+}
+</script>
+
+</body>
+</html>
